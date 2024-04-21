@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv'
 import cors from 'cors'
-
+//checking if submodule works or not in backend
 dotenv.config({ path: './.env' });
 
 const port = process.env.PORT;
