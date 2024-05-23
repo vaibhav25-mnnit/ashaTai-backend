@@ -23,7 +23,7 @@ const tempSchema = new mongoose.Schema({
             }
         }
 
-    ]
+    ] 
 
 
 }, { timestamps: true })

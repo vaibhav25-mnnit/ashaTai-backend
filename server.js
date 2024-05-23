@@ -15,7 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 
 //function to connect to database and it's import 
 import connectTodb from "./utils/connectTodb.js";
+
 connectTodb()
+
 
 //routes imports 
 import userRoutes from "./routes/userRoutes.js"
@@ -25,6 +27,9 @@ import ordersRoutes from "./routes/orderRoutes.js"
 import paymentRoutes from "./routes/paymentRoutes.js"
 import authRoutes from "./routes/authRoutes.js"
 import { tempModel } from "./models/tempSchmea.js";
+
+import { createAndSendMail } from "./utils/nodeMailer.js"
+
 
 app.use('/user', userRoutes)
 app.use('/product', productRoutes)
@@ -58,6 +63,13 @@ app.post('/temp', async (req, res) => {
     res.status(200).json(r)
 })
 
+app.get("/sendmail/:id",async (req,res)=>{
+    const id = req.params.id - '0';
+
+    const mail = "bagatevaibhav555@gmail.com"
+    createAndSendMail(mail,id);
+    res.send("sending mail")
+})
 
 app.listen(port || 5000, () => {
     console.log("Server Listening to request's 👊 on port " + 5000)

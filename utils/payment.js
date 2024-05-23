@@ -3,7 +3,6 @@ import createSdk from 'api'
 import { createOrder } from '../controllers/ordersControllers.js'
 const sdk = createSdk("@cashfreedocs-new/v3#z7c5zzlkqza7c0")
 
-
 export const createPayment = async (req, res) => {
   try {
     const mode = req.query.mode
@@ -42,8 +41,6 @@ export const createPayment = async (req, res) => {
   }
 
 }
-
-
 
 export const verifyOrder = async (req, res) => {
 
