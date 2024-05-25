@@ -73,42 +73,106 @@ const templates = {
                 <p>Best regards,<br />[Store Name] Team</p>
             </div>
         `
-    })
+    }),
+
+    orderCancellation: (customerName, orderNumber, cancellationDate, refundDetails) => ({
+        subject: `Your Order ${orderNumber} Has Been Cancelled`,
+        html: `
+            <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2>Order Cancelled: ${orderNumber}</h2>
+                <p>Hi ${customerName},</p>
+                <p>We’re sorry to inform you that your order <strong>${orderNumber}</strong> has been cancelled.</p>
+                <p><strong>Cancellation Date:</strong> ${cancellationDate}</p>
+                <p><strong>Refund Details:</strong> ${refundDetails}</p>
+                <p>If you have any questions or need further assistance, please contact our support team.</p>
+                <p>We apologize for any inconvenience caused.</p>
+                <p>Best regards,<br />[Store Name] Team</p>
+            </div>
+        `
+    }),
  
+    resetPassword:(user)=>({
+        subject: 'Reset Your Password',
+        html: `
+            <!DOCTYPE html>
+            <html lang="en"> 
+            <body style="font-family: Arial, sans-serif; margin: 0; padding: 0;">
+
+            <div style="background-color: #f5f5f5; padding: 20px;">
+                <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+                <tr>
+                    <td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                        <td style="text-align: center;">
+                            <h2 style="color: #333333;">Forgot Password</h2>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td style="padding: 20px 0 30px 0; text-align: center;">
+                            <p style="color: #666666;">You have requested to reset your password. Click the link below to reset your password:</p>
+                             <p>
+                              <a href="http://localhost:5000/auth/changepassword/${user.resetPasswordToken}?mail=${user.email}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                            </p>
+                        </td>
+                        </tr>
+                    </table>
+                    </td>
+                </tr>
+                </table>
+            </div>
+
+            </body>
+            </html>
+        `
+    })
 };
 
-export const createAndSendMail = async (mail,id) => {
+export const createAndSendMail = async (mail,id,mailContentInfo) => {
     
     try {
     
         let mailInfo = { 
             to: mail
         }
+
         switch (id) {
+           
             case mailOptions.orderConfirmation:  
             mailInfo = {
                 ...mailInfo,
                 ...templates.orderConfirmation('Customer Name', '12345', '2024-05-20', exampleOrderItems, '123 Main St, Anytown, USA')
             }     
             break;
+           
             case mailOptions.shippingConfirmation: 
             mailInfo = {
                 ...mailInfo,
                 ...templates.shippingConfirmation('Customer Name','#12334','shiprocket','12345', '2024-05-20')
             }
                 break;
+            
             case mailOptions.deliveryConfirmation: 
             mailInfo = {
                 ...mailInfo,
                 ...templates.deliveryConfirmation('Customer Name', '12345', '2024-05-20')
             }
             break;
+           
             case mailOptions.orderCancellation: 
             mailInfo = {
                 ...mailInfo,
                 ...templates.orderCancellation('Customer Name', '12345', '2024-05-20','refund initiated to original payment method.')
             }
             break;
+            
+            case mailOptions.passwordReset:
+                mailInfo = {
+                    ...mailInfo,
+                    ...templates.resetPassword(mailContentInfo)
+                }
+            break;
+           
             default:
                 break;
         }  

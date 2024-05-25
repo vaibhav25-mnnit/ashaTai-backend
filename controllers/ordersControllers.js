@@ -3,7 +3,7 @@ import { ordersModel } from "../models/ordersModel.js";
 
 
 //get all the orders sorted in descending order of their creation
-export const getOrders = async (req, res) => {
+export const getUserOrders = async (req, res) => {
 
     let query = ordersModel.find({ user: req.params.id })
     query = query.sort({ createdAt: -1 })
@@ -45,5 +45,18 @@ export const updateOrder = async (req, res) => {
         res.status(200).json(newOrder)
     } catch (error) {
         res.status(500).json(error)
+    }
+}
+
+export const adminOrders = async (req, res) => {
+
+    let query = ordersModel.find()
+    query = query.sort({ createdAt: -1 })
+    console.log("getting order for admin")
+    try {
+        const response = await query.exec()
+        res.status(200).send(response)
+    } catch (error) {
+        res.status(500).send(error)
     }
 }

@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     selectedAddress: {
         type: Schema.ObjectId, ref: 'address',
     },
+    resetPasswordToken: String,
     addresses: [{ type: Schema.ObjectId, ref: 'address' }],
 }, { timestamps: true })
 
@@ -28,8 +29,7 @@ const userSchema = new mongoose.Schema({
 const virtual = userSchema.virtual('id')
 virtual.get(function () {
     this._id;
-})
-
+}) 
 
 userSchema.set('toJSON', {
     virtuals: true,

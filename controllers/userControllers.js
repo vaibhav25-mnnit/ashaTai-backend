@@ -23,7 +23,6 @@ export const getUserById = async (req, res) => {
     }
 }
 
-
 //get user's id here
 export const updateUser = async (req, res) => {
     const id = req.params.id;
@@ -69,8 +68,6 @@ export const updateUser = async (req, res) => {
         try {
             await addressModel.findByIdAndDelete(query.delete)
             let updatedUser = await userModel.findByIdAndUpdate(id, { $pull: { addresses: query.delete } }, { new: true })
-
-
 
             if (updatedUser.selectedAddress.equals(query.delete)) {
                 updatedUser = await userModel.findByIdAndUpdate(id, { selectedAddress: updatedUser._id }, { new: true })
