@@ -13,5 +13,4 @@ router.get('/get/:userId', getCartItems)
     .delete('/reset/:id', deleteCartItem)
 
 
-
 export default router;

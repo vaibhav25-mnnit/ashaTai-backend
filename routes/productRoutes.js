@@ -4,7 +4,7 @@ const router = express.Router();
 import { addNewProduct, deleteProduct, getAllProducts, getSpecificProducts, updateProduct } from '../controllers/productControllers.js'
 
 
-router.get('/get', getAllProducts)
+router.get('/all', getAllProducts)
     .get('/getProduct/:id', getSpecificProducts)
     .post('/add', addNewProduct)
     .patch('/update/:id', updateProduct)

@@ -16,7 +16,8 @@ export const signUp = async (req, res) => {
         //->if present send error with email already present 
         if (user) {
             res.status(500).json({
-                message: "User with that email already exist."
+                message: "User with that email already exist.",
+                data:null
             })
             return;
         }
@@ -24,16 +25,17 @@ export const signUp = async (req, res) => {
        
         //hash the password 
         const hashedPassword = await encryptPassword(pass)
-        const resetPasswordToken =  crypto.randomBytes(20).toString('hex');
+        const resetToken =  crypto.randomBytes(20).toString('hex');
 
         //create the new user and save into database
-        let newUser = new userModel({ name: name, email: email, password: hashedPassword,resetPasswordToken:resetPasswordToken }) 
-        newUser = await newUser.save();
-
-        res.status(201).json({
-            message: "user created successfully",
-            redirect: true
-        })
+        let newUser = new userModel({ name: name, email: email, password: hashedPassword,resetPasswordToken:resetToken }) 
+        newUser = await newUser.save(); 
+        const { password, resetPasswordToken, ...response } = newUser._doc;
+            res.status(201).json({
+                message: "Please,login signed up successfully",
+                redirect: true,
+                data: response
+            })
 
     } catch (error) {
         console.log("Error in sign up");
@@ -43,7 +45,7 @@ export const signUp = async (req, res) => {
 
 export const login = async (req, res) => {
     //get the email and password
-    const { email, password } = req.body;
+    const { email, password } = req.body; 
     try {
         //check if user with that email exist or not 
         const user = await userModel.findOne({ email: email })
@@ -59,7 +61,7 @@ export const login = async (req, res) => {
  
         //-->else error with wrong password
         if (!isPasswordMatched) {
-            res.status(500).json({ message: "Invalid credentials" })
+            res.status(500).json({ message: "Invalid credentials", data:null })
             return;
         }
 
@@ -70,7 +72,7 @@ export const login = async (req, res) => {
                 message: "Logged in successfully",
                 data: response
             })
-        }
+        } 
     } catch (error) {
         console.log(error)
         res.status(500).json(error)

@@ -7,15 +7,19 @@ export const addToCart = async (req, res) => {
     const item = req.body;
     const newCartItem = new cartModel(item)
     try {
-        const addedItem = await newCartItem.save()
+         
+        await newCartItem.save()
+        const response = await cartModel.populate(newCartItem,{ path: 'product', select: 'title brand price discountPercentage thumbnail' }); 
+
         res.status(200).json({
             message: "Successfully added new item to cart",
-            data: addedItem
+            data: response
         })
     } catch (error) {
         console.log(error)
         res.status(500).json({
             message: "Failed to add item to Cart ",
+            data:null
         })
     }
 
@@ -26,7 +30,7 @@ export const getCartItems = async (req, res) => {
     const userId = req.params.userId;
 
     try {
-        const response = await cartModel.find({ user: userId }).populate({ path: 'user', select: 'name' }).populate({ path: 'product', select: 'title brand price discountPercentage thumbnail' })
+        const response = await cartModel.find({ user: userId }).populate({ path: 'product', select: 'title brand price discountPercentage thumbnail' })
         res.status(200).send(response)
     } catch (error) {
         res.status(500).send("Error fetching  the cart")
@@ -61,7 +65,10 @@ export const deleteCartItem = async (req, res) => {
             data: response
         });
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({
+            message: "Unable to remove item from cart.",
+            data: error
+        });
     }
 }
 

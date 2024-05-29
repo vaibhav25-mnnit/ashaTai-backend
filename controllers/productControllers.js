@@ -6,7 +6,7 @@ import { productModel } from "../models/productModel.js";
 export const getAllProducts = async (req, res) => {
     let query = productModel.find(), totalItems = productModel.find();
 
-    const page = (req.query.page - 1) || 0, limit = req.query.limit || 20;
+    const page = (req.query._page - 1) || 0, limit = req.query._limit || 20;
 
     if (req.query.category) {
         query = query.find({ 'category': req.query.category })
@@ -28,6 +28,7 @@ export const getAllProducts = async (req, res) => {
         const total = await totalItems.count().exec();
         const data = await query.exec()//final execute query
         res.setHeader('X-total-Count', total)
+        res.header('Access-Control-Expose-Headers', 'X-Total-Count')
         res.status(200).json(data)
     } catch (error) {
         res.status(500).json(error)
