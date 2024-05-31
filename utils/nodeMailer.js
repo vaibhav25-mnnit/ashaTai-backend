@@ -112,12 +112,12 @@ const templates = {
                         <td style="padding: 20px 0 30px 0; text-align: center;">
                             <p style="color: #666666;">You have requested to reset your password. Click the link below to reset your password:</p>
                              <p>
-                              <a href="http://localhost:5000/auth/changepassword/${user.resetPasswordToken}?mail=${user.email}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                              <a href="http://localhost:3000/reset-password/${user.resetPasswordToken}?mail=${user.email}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
                             </p>
                         </td>
                         </tr>
                     </table>
-                    </td>
+                    </td>   
                 </tr>
                 </table>
             </div>

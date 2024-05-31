@@ -87,29 +87,28 @@ export const sendResetMail = async (req, res) => {
 
         if (!user) {
             //->if not send res with error that user with that email does not exist
-            res.status(500).json({ message: "No User with that email id." })
+            res.status(500).json({ success:false, message: "No User with that email id." })
             return;
         }
         await createAndSendMail(user.email,4,user);
         
     } catch (error) {
         console.log(error)
-        res.status(500).json(error)
+        res.status(500).json({success:false, message: "Unable to send reset mail.Please try after sometime." })
     }
 
-    res.status(200).send({ message: "Password reset mail sent successfully.Please,check you inbox." });
+    res.status(200).send({ success:true, message: "Password reset mail sent successfully.Please,check you inbox." });
 }
 
-export const resetPassword= async (req, res) => {
-    const token = req.params.token
-    const { password } = req.body;
+export const resetPassword= async (req, res) => {  
+    const { token,password } = req.body;
     try {
         //check if user with that email exist or not 
         const user = await userModel.findOne({ resetPasswordToken: token })
 
         if (!user) {
             //->if not send res with error that user with that email does not exist
-            res.status(500).json({ message: "Provided password reset token is incorrect." })
+            res.status(500).json({ success:false,  message: "Provided password reset token is incorrect." })
             return;
         }
 
@@ -117,10 +116,10 @@ export const resetPassword= async (req, res) => {
         const hashedPassword = await encryptPassword(password);
         user.password = hashedPassword;
         await user.save();
-        res.status(200).json({ message: "Successfully Updated password." });
+        res.status(200).json({success:true, message: "Successfully Updated password." });
     } catch (error) {
         console.log(error)
-        res.status(500).json(error)
+        res.status(500).json({success:false, message: "Unable to reset password.Please try after sometime." })
     }
 
 }
