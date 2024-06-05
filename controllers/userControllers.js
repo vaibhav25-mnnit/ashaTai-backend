@@ -13,9 +13,8 @@ export const getAllUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
     const id = req.params.id
     try {
-        const user = await userModel.findById(id).populate('addresses')
-
-        const { password, ...response } = user._doc;
+        const user = await userModel.findById(id).populate('addresses').populate('selectedAddress')
+    const { password, ...response } = user._doc;
         res.status(200).send(response)
     } catch (error) {
         console.log(error)
@@ -47,17 +46,16 @@ export const updateUser = async (req, res) => {
     }
 
     // add new address in user's array of addresses
-    if (query.add) {
-
+    if (query.add) { 
         try {
             const newAddress = new addressModel({ ...req.body, user: id })
             const saveAddress = await newAddress.save();
-            const updatedUser = await userModel.findByIdAndUpdate(id, { $push: { "addresses": saveAddress._id } }, { new: true })
-            const { password, ...response } = updatedUser._doc;
-            res.status(200).json(response)
+            const updatedUser = await userModel.findByIdAndUpdate(id, {selectedAddress: saveAddress._id , $push: { "addresses": saveAddress._id } }, { new: true }).populate('addresses').populate('selectedAddress')
+            const { password, resetPasswordToken, ...response } = updatedUser._doc;
+            res.status(200).json({success:true,data:response})
 
         } catch (error) {
-            res.status(500).json(error)
+            res.status(500).json({success:false,message:"Unable to add new address"})
         }
         return;
     }
@@ -67,17 +65,17 @@ export const updateUser = async (req, res) => {
     if (query.delete) {
         try {
             await addressModel.findByIdAndDelete(query.delete)
-            let updatedUser = await userModel.findByIdAndUpdate(id, { $pull: { addresses: query.delete } }, { new: true })
+            let updatedUser = await userModel.findByIdAndUpdate(id, { $pull: { addresses: query.delete } }, { new: true }).populate('addresses').populate('selectedAddress')
 
             if (updatedUser.selectedAddress.equals(query.delete)) {
-                updatedUser = await userModel.findByIdAndUpdate(id, { selectedAddress: updatedUser._id }, { new: true })
+                updatedUser = await userModel.findByIdAndUpdate(id, { selectedAddress: updatedUser._id }, { new: true }).populate('addresses').populate('selectedAddress')
             }
 
-            const { password, ...response } = updatedUser._doc;
-            res.status(200).json(response)
+            const { password, resetPasswordToken, ...response } = updatedUser._doc;
+            res.status(200).json({success:true,data:response})
         } catch (err) {
             console.log(err)
-            res.status(500).json(err)
+            res.status(500).json({success:false,message:"Unable to add new address"})
         }
         return;
     }
@@ -85,12 +83,23 @@ export const updateUser = async (req, res) => {
 
     //other than address field update like name email phoneNumber etc
     try {
-        const updatedUser = await userModel.findByIdAndUpdate(id, req.body, { new: true })
-        res.status(200).json(updatedUser)
-
+        const updatedUser = await userModel.findByIdAndUpdate(id, req.body, { new: true }).populate('addresses').populate('selectedAddress')
+       
+        const { password, resetPasswordToken, ...response } = updatedUser._doc;
+        res.status(200).json({success:true,data:response})
     } catch (err) {
         console.log(err)
-        res.status(500).json(err)
-
+        res.status(500).json({success:false,message:"Unable to add new address"})
     }
 }   
+
+export const getUserAddressById = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const address = await addressModel.find({user:id})
+        res.status(200).json({success:true,data:address})
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({success:false,message:"Unable to get address",error:error})
+    }
+}

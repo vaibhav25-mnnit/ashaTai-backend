@@ -18,9 +18,7 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    selectedAddress: {
-        type: Schema.ObjectId, ref: 'address',
-    },
+    selectedAddress: { type: Schema.ObjectId, ref: 'address' },
     resetPasswordToken: String,
     addresses: [{ type: Schema.ObjectId, ref: 'address' }],
 }, { timestamps: true })

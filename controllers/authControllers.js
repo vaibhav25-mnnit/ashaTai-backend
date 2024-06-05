@@ -27,18 +27,19 @@ export const signUp = async (req, res) => {
         const hashedPassword = await encryptPassword(pass)
         const resetToken =  crypto.randomBytes(20).toString('hex');
 
-        //create the new user and save into database
-        let newUser = new userModel({ name: name, email: email, password: hashedPassword,resetPasswordToken:resetToken }) 
-        newUser = await newUser.save(); 
-        const { password, resetPasswordToken, ...response } = newUser._doc;
-            res.status(201).json({
-                message: "Please,login signed up successfully",
-                redirect: true,
-                data: response
-            })
+         //create the new user and save into database
+         let newUser = new userModel({ name: name, email: email, password: hashedPassword,resetPasswordToken:resetToken }) 
+         newUser = await newUser.save(); 
+         const { password, resetPasswordToken, ...response } = newUser._doc;
+             res.status(201).json({
+                 message: "Please,login signed up successfully",
+                 redirect: true,
+                 data: response
+             })
 
     } catch (error) {
         console.log("Error in sign up");
+        console.log(error);
         res.status(500).json(error);
     }
 }
@@ -48,7 +49,7 @@ export const login = async (req, res) => {
     const { email, password } = req.body; 
     try {
         //check if user with that email exist or not 
-        const user = await userModel.findOne({ email: email })
+        const user = await userModel.findOne({ email: email }).populate('addresses').populate('selectedAddress')
 
         if (!user) {
             //->if not send res with error that user with that email does not exist
