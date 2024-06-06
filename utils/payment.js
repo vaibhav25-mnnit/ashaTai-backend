@@ -4,16 +4,14 @@ import { createOrder } from '../controllers/ordersControllers.js'
 const sdk = createSdk("@cashfreedocs-new/v3#z7c5zzlkqza7c0")
 
 export const createPayment = async (req, res) => {
-  try {
-    const mode = req.query.mode
-    const order = await createOrder(req.body)
-
-    if (mode === 'cash') {
+  try { 
+    const order = await createOrder(req.body) 
+    if (order.paymentDetails) {
       res.status(200).json({
-        message: "Order Placed successfully",
+        message: "Order Placed successfully using cod.",
         data: order
       })
-      return
+      return;
     }
     const date = new Date();
     const expiry = new Date(date.getTime() + 20 * 60000);
@@ -33,8 +31,11 @@ export const createPayment = async (req, res) => {
       'x-client-id': process.env.CASHFREE_APP_ID,
       'x-client-secret': process.env.CASHFREE_SECRET_KEY,
       'x-api-version': '2022-09-01'
+    }) 
+    res.status(200).json( {
+      message: "Order Placed successfully using online.",
+      data: payment.data
     })
-    res.status(200).json(payment.data)
   } catch (err) {
     console.log(err)
     res.status(500).json(err)
