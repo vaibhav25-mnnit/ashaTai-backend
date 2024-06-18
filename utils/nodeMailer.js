@@ -5,6 +5,7 @@ const exampleOrderItems = [
   { name: "Item 1", quantity: 1, price: "$10" },
   { name: "Item 2", quantity: 2, price: "$20" },
 ];
+
 const templates = {
   orderConfirmation: (
     customerName,
@@ -69,27 +70,6 @@ const templates = {
                 <p><strong>Delivery Date:</strong> ${deliveryDate}</p>
                 <p>We hope you enjoy your purchase! If you have any questions or need assistance, please feel free to contact our customer support team.</p>
                 <p>Thank you for choosing [Store Name].</p>
-                <p>Best regards,<br />[Store Name] Team</p>
-            </div>
-        `,
-  }),
-
-  orderCancellation: (
-    customerName,
-    orderNumber,
-    cancellationDate,
-    refundDetails
-  ) => ({
-    subject: `Your Order ${orderNumber} Has Been Cancelled`,
-    html: `
-            <div style="font-family: Arial, sans-serif; color: #333;">
-                <h2>Order Cancelled: ${orderNumber}</h2>
-                <p>Hi ${customerName},</p>
-                <p>We’re sorry to inform you that your order <strong>${orderNumber}</strong> has been cancelled.</p>
-                <p><strong>Cancellation Date:</strong> ${cancellationDate}</p>
-                <p><strong>Refund Details:</strong> ${refundDetails}</p>
-                <p>If you have any questions or need further assistance, please contact our support team.</p>
-                <p>We apologize for any inconvenience caused.</p>
                 <p>Best regards,<br />[Store Name] Team</p>
             </div>
         `,
