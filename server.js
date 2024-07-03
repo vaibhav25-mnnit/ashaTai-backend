@@ -24,6 +24,7 @@ import cartRoutes from "./routes/cartRoutes.js";
 import ordersRoutes from "./routes/orderRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import categoryRoutes from "./routes/categoriesRoutes.js";
 
 app.use("/user", userRoutes);
 app.use("/product", productRoutes);
@@ -31,6 +32,7 @@ app.use("/cart", cartRoutes);
 app.use("/order", ordersRoutes);
 app.use("/pay", paymentRoutes);
 app.use("/auth", authRoutes);
+app.use("/category", categoryRoutes);
 
 app.get("/", async (req, res) => {
   res.status(200).send("Hello there I am listening....");
