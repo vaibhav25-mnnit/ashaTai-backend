@@ -13,11 +13,6 @@ export const getAllProducts = async (req, res) => {
     totalItems = totalItems.find({ category: req.query.category });
   }
 
-  if (req.query.brand) {
-    query = query.find({ brand: req.query.brand });
-    totalItems = totalItems.find({ brand: req.query.brand });
-  }
-
   if (req.query._sort && req.query._order) {
     query = query.sort({ [req.query._sort]: req.query._order });
   }
