@@ -2,6 +2,7 @@ import { productModel } from "../models/productModel.js";
 
 //get products based on different filters
 export const getAllProducts = async (req, res) => {
+  console.log(req.query);
   let query = productModel.find(),
     totalItems = productModel.find();
 
@@ -11,11 +12,6 @@ export const getAllProducts = async (req, res) => {
   if (req.query.category) {
     query = query.find({ category: req.query.category });
     totalItems = totalItems.find({ category: req.query.category });
-  }
-
-  if (req.query.brand) {
-    query = query.find({ brand: req.query.brand });
-    totalItems = totalItems.find({ brand: req.query.brand });
   }
 
   if (req.query._sort && req.query._order) {
