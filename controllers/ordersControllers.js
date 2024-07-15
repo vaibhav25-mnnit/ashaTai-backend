@@ -2,12 +2,11 @@ import { ordersModel } from "../models/ordersModel.js";
 
 //get all the orders sorted in descending order of their creation
 export const getUserOrders = async (req, res) => {
-  console.log(req.query);
-
   const { status, year } = req.query;
   let query = ordersModel.find({ user: req.params.id });
   let totalItems = ordersModel.find({ user: req.params.id });
-
+  const page = req.query._page - 1 || 0,
+    limit = req.query._limit || 20;
   if (status) {
     query = query.find({ status: status });
     totalItems = totalItems.find({ status: status });
@@ -35,7 +34,7 @@ export const getUserOrders = async (req, res) => {
   }
 
   query = query.sort({ createdAt: -1 });
-
+  query.skip(page * limit).limit(limit); //for pagination logic
   try {
     const total = await totalItems.count().exec();
     const data = await query.exec(); //final execute query

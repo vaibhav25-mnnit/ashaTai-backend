@@ -2,6 +2,7 @@ import { productModel } from "../models/productModel.js";
 
 //get products based on different filters
 export const getAllProducts = async (req, res) => {
+  console.log(req.query);
   let query = productModel.find(),
     totalItems = productModel.find();
 
