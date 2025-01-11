@@ -2,7 +2,7 @@ import { productModel } from "../models/productModel.js";
 
 //get products based on different filters
 export const getAllProducts = async (req, res) => {
-  console.log(req.query);
+  // console.log(req.query);
   let query = productModel.find(),
     totalItems = productModel.find();
 
@@ -12,6 +12,10 @@ export const getAllProducts = async (req, res) => {
   if (req.query.category) {
     query = query.find({ category: req.query.category });
     totalItems = totalItems.find({ category: req.query.category });
+  }
+
+  if (req.query.tag) {
+    query = query.find({ tags: { $in: [req.query.tag] } });
   }
 
   if (req.query._sort && req.query._order) {
@@ -58,9 +62,18 @@ export const addNewProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   const id = req.params.id;
   try {
-    const updatedProduct = await productModel.findOneAndUpdate(
-      { _id: id },
-      req.body,
+    const { tags, ...otherFields } = req.body;
+    const updateObject = {
+      ...otherFields,
+    };
+
+    if (tags && Array.isArray(tags)) {
+      updateObject.$addToSet = { tags: { $each: tags } };
+    }
+
+    const updatedProduct = await productModel.findByIdAndUpdate(
+      id,
+      updateObject,
       { new: true }
     );
     res.status(200).json(updatedProduct);
