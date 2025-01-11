@@ -15,6 +15,10 @@ export const productSchema = new mongoose.Schema(
       max: [99, "wrong max discount"],
       required: true,
     },
+    tags: {
+      type: [String],
+      default: [],
+    },
     rating: {
       type: Number,
       min: [0, "minimum rating should be 0"],
