@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: E-commerce test
+  title: Asha-Tai Backend Api's
   version: 1.0.0
 paths:
   /product/add:
